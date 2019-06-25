@@ -148,7 +148,7 @@ wCost=((SpScale)*sign(W1)+(2*ENL2)*W1);
 else
     wCost=((SpScale)*sign(W1));
 end
-gradW1=gradW1-wCost-diag(SpDiag*diag(gradW1));
+gradW1=gradW1-wCost-diag(SpDiag*sign(diag(W1)));
 
 %    if mod(iBatch,50)==1
 %       Out.E(:,ceil(iBatch/50))=mean(E.^2,2);

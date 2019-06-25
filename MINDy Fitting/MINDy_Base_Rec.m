@@ -117,7 +117,7 @@ gradWk2=Wk1'*gradW1-SpPls2*sign(Wk2);
 end
 mP=mean(abs(PolyZ),2)'; %J=mean(abs(W1),1);%./(mP.^2);
 wCost=((SpScale)*sign(W1)+(2*ENL2)*W1).*(mP/mean(mP));
-gradW1=gradW1-wCost;
+gradW1=gradW1-wCost-diag(SpDiag*sign(diag(W1)));
 
 
 mW1=mu*mW1+(1-mu)*gradW1;

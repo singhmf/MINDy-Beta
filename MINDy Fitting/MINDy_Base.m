@@ -92,7 +92,7 @@ wCost=((SpScale)*sign(W1)+(2*ENL2)*W1);
 else
     wCost=((SpScale)*sign(W1));
 end
-gradW1=gradW1-wCost-diag(SpDiag*diag(gradW1));
+gradW1=gradW1-wCost-diag(SpDiag*sign(diag(W1)));
 DpTemp=(B1(:,1).^-1).*W1E.*((1./P1)-(1./P2));
 %% Really fitting grad (A.^-.5)
 gradA=-Aep.^(1.5).*mean(DpTemp,2);

@@ -1,6 +1,4 @@
 function[Out]=MINDy_HRF(X,Pre,ParStr)
-
-%function[Out]=MINDy_HRF(xHRFpoly,DxHRFpoly,PolyVec,ParStr)
 %% Fit MINDy HRF with polynomials for both derivative and original time series
 %% {'p00'} {'p10'} {'p01'} {'p20'} {'p11'} {'p02'} {'p30'} {'p21'} {'p12'} {'p03'}
 MINDy_type='HRF'; %#ok<NASGU>
@@ -78,7 +76,7 @@ end
 
 mP=mean(abs(PolyZ),2)'; %J=mean(abs(W1),1);%./(mP.^2);
 wCost=((SpScale)*sign(W1)+(2*ENL2)*W1).*(mP/mean(mP));
-gradW1=gradW1-wCost-diag(SpDiag*diag(gradW1));
+gradW1=gradW1-wCost-diag(SpDiag*sign(diag(W1)));
 
 
 DpTemp=(B1(:,1).^-1).*W1E.*((1./P1)-(1./P2));
