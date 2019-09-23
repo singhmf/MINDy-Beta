@@ -1,8 +1,12 @@
-function [Y,BadFrames] = MINDy_RestingPreProcInterp(XDat,FiltAmp,ConvLevel,DownSamp,TR)
-%% Filters by Point rather than by Frame!!
+function [Y,BadFrames] = MINDy_RestingPreProcInterp(XDat,FiltAmp,ConvLevel,DownSamp,TR,varargin)
 
-%% CHANGE: Unilke MyPreProc, this version retains the mean and variance from original signal
-%% and removes the [1 1] smoothing!
+if isempty(varargin)
+    tLength=30;
+else
+    tLength=varargin{1};
+end
+
+
 if iscell(XDat)
     nSub=numel(XDat);
 else
@@ -41,7 +45,7 @@ c=1/6;
 
 h=@(t)((t.^(a1-1).*exp(-b1*t)*(b1^a1))/gamma(a1)-c*((t.^(a2-1).*exp(-b2*t)*b2^a2)/gamma(a2)));
 
-ConvVec=h(ConvRes*(0:(size(X,2)-1)));
+ConvVec=h(ConvRes*(0:tLength));
 
 X=deconvwnr(X,ConvVec,WeinerNoise);
 
