@@ -9,11 +9,14 @@ else
     doPreProc=varargin{1};
 end
 
-ChosenPARSTR
+ChosenPARSTR_00;
 ParStr.BatchSz=300;ParStr.NBatch=5000;
 doRobust='n';
+%% If you are using a different TR insert it here (in seconds) as:
+%% Pre.TR=(your TR)
 
 ParStr.H1min=5;ParStr.H1max=7;ParStr.H2min=.7;ParStr.H2max=1.3;ParStr.H1Rate=.1;ParStr.H2Rate=.1;
+ParStr.L2SpPlsEN=0;
 
 if ~iscell(Dat)
 Dat={Dat};
@@ -25,20 +28,16 @@ end
 
 Dat=cellfun(@(xx)(zscore(xx')'),Dat,'UniformOutput',0);
 
-%% Preprocessing (if desired)
 if strcmpi(doPreProc,'y')
 Dat=MINDy_RestingPreProcInterp(Dat,Pre.FiltAmp,Pre.ConvLevel,Pre.DownSamp,Pre.TR);
 Dat=cellfun(@(xx)(zscore(xx(:,20:(end-20))')'),Dat,'UniformOutput',0);
 end
 
-%% Compute Finite-Difference Derivatives
-dDat=cellfun(@(xx)(convn(xx,[1 -1],'valid')),Dat,'UniformOutput',0);
-Dat=cellfun(@(xx)(xx(:,1:end-1)),Dat,'UniformOutput',0);
+dDat=cellfun(@(xx)(convn(xx,[1 0 -1]/2,'valid')),Dat,'UniformOutput',0);
+Dat=cellfun(@(xx)(xx(:,1:end-2)),Dat,'UniformOutput',0);
 
-%% Fit MINDY models
-Out=MINDy_Base(Dat,dDat,Pre,ParStr);
+Out=MINDy_Base_00(Dat,dDat,Pre,ParStr);
 
-%% Censor filtered data-points for subsequent analyses/adjustment
 [X1,dX1]=MINDy_Censor(Out,Dat,dDat);
 
 %% Global regression on W and D to get rid of global regularization bias
