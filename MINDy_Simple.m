@@ -1,6 +1,7 @@
-function[Out]=MINDy_Simple(Dat,varargin)
+function[Out,Wfin,Dfin]=MINDy_Simple(Dat,varargin)
 %% Just Input Data as region x time (a single matrix or cell of matrices)
 %% Output.Param={Wsparse,A,b,c,Wfull,D}
+%% optional second and third outputs give Wfull and D
 
 %% Optional input argument is whether to do preprocessing (filtering and deconvolution)
 if isempty(varargin)
@@ -33,6 +34,7 @@ Dat=MINDy_RestingPreProcInterp(Dat,Pre.FiltAmp,Pre.ConvLevel,Pre.DownSamp,Pre.TR
 Dat=cellfun(@(xx)(zscore(xx(:,20:(end-20))')'),Dat,'UniformOutput',0);
 end
 
+%% For HCP TRs down-sample by a factor of two
 dDat=cellfun(@(xx)(convn(xx,[1 0 -1]/2,'valid')),Dat,'UniformOutput',0);
 Dat=cellfun(@(xx)(xx(:,1:end-2)),Dat,'UniformOutput',0);
 
@@ -48,4 +50,5 @@ Out=MakeMINDyFunction(Out);
 Out.Corr=DiagCorr(Out.FastFun([X1{:}])',[dX1{:}]');
 Out=rmfield(Out,{'FastFun','Tran'});
 Out.Pre=Pre;Out.ParStr=ParStr;
+Wfin=Out.Param{5};Dfin=Out.Param{6};
 end
