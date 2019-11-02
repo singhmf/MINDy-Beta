@@ -1,12 +1,4 @@
-function [Y,BadFrames] = MINDy_RestingPreProcInterp(XDat,FiltAmp,ConvLevel,DownSamp,TR,varargin)
-
-if isempty(varargin)
-    tLength=30;
-else
-    tLength=varargin{1};
-end
-
-
+function [Y,BadFrames] = MINDy_RestingPreProcInterp(XDat,FiltAmp,ConvLevel,DownSamp,TR)
 if iscell(XDat)
     nSub=numel(XDat);
 else
@@ -45,7 +37,7 @@ c=1/6;
 
 h=@(t)((t.^(a1-1).*exp(-b1*t)*(b1^a1))/gamma(a1)-c*((t.^(a2-1).*exp(-b2*t)*b2^a2)/gamma(a2)));
 
-ConvVec=h(ConvRes*(0:tLength));
+ConvVec=h(ConvRes*(0:(size(X,2)-1)));
 
 X=deconvwnr(X,ConvVec,WeinerNoise);
 
